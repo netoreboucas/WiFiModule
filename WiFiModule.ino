@@ -1,16 +1,9 @@
-void setup()
-{
-  Serial1.begin(115200);
-  Serial.begin(115200);
+#include "Display.h"
+
+void setup() {
+  display.init();
 }
 
-void loop()
-{
-  if (Serial1.available() > 0) {
-    Serial.write(Serial1.read());
-  }
-  
-  if (Serial.available() > 0) {
-    Serial1.write(Serial.read());
-  }
+void loop() {
+  display.test();
 }
