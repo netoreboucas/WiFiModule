@@ -1,6 +1,4 @@
 #include "Display.h"
-#include "LiquidCrystal.h"
-
 Display display;
 
 LiquidCrystal lcd(PIN_RS, PIN_ENABLE, PIN_DB4, PIN_DB5, PIN_DB6, PIN_DB7);
@@ -15,12 +13,12 @@ void Display::clear() {
 }
 
 void Display::write(String text) {
-  lcd.clear();
+  clear();
   lcd.print(text);
 }
 
 void Display::write(String line1, String line2) {
-  lcd.clear();
+  clear();
   lcd.print(line1);
   lcd.setCursor(0, 1);
   lcd.print(line2);

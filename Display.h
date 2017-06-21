@@ -41,6 +41,7 @@
 #define Display_h
 
 #include "Arduino.h"
+#include "LiquidCrystal.h"
 
 #define PIN_RS          12 // pin 04
 #define PIN_ENABLE      11 // pin 06
