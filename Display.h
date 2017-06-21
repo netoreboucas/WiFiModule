@@ -55,7 +55,9 @@
 class Display {
   public:
     void init();
-    void test();
+    void clear();
+    void write(String text);
+    void write(String line1, String line2);
 };
 
 extern Display display;

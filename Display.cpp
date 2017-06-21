@@ -7,11 +7,21 @@ LiquidCrystal lcd(PIN_RS, PIN_ENABLE, PIN_DB4, PIN_DB5, PIN_DB6, PIN_DB7);
 
 void Display::init() {
   lcd.begin(LCD_WIDTH, LCD_HEIGHT);
-  lcd.print("hello");
+  lcd.clear();
 }
 
-void Display::test() {
-  delay(100);
+void Display::clear() {
+  lcd.clear();
+}
+
+void Display::write(String text) {
+  lcd.clear();
+  lcd.print(text);
+}
+
+void Display::write(String line1, String line2) {
+  lcd.clear();
+  lcd.print(line1);
   lcd.setCursor(0, 1);
-  lcd.print(millis() / 1000);
+  lcd.print(line2);
 }

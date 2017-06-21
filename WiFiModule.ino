@@ -2,8 +2,9 @@
 
 void setup() {
   display.init();
+  display.write("Inicializando...");
 }
 
 void loop() {
-  display.test();
+  
 }
