@@ -57,8 +57,7 @@ class Display {
   public:
     void init();
     void clear();
-    void write(String text);
-    void write(String line1, String line2);
+    void setText(String line1, String line2 = "");
 };
 
 extern Display display;

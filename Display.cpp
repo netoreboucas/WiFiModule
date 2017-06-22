@@ -12,12 +12,7 @@ void Display::clear() {
   lcd.clear();
 }
 
-void Display::write(String text) {
-  clear();
-  lcd.print(text);
-}
-
-void Display::write(String line1, String line2) {
+void Display::setText(String line1, String line2) {
   clear();
   lcd.print(line1);
   lcd.setCursor(0, 1);

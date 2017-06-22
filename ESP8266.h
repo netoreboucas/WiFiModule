@@ -20,6 +20,8 @@
 
 class ESP8266 {
   public:
+    String readLineUntil_Output;
+  
     void init();
     void reset();
     
@@ -35,7 +37,6 @@ class ESP8266 {
     
   private:
     static HardwareSerial& serial;
-    String readLineUntil_Output;
 };
 
 extern ESP8266 esp8266;

@@ -7,6 +7,14 @@ void Console::init() {
   serial.begin(115200);
 }
 
+int Console::available() {
+  return serial.available();
+}
+
+String Console::readString() {
+  return serial.readString();
+}
+
 void Console::write(byte b) {
   serial.write(b);
 }

@@ -15,6 +15,7 @@
 #define Logger_h
 
 #include "Arduino.h"
+#include "Console.h"
 #include "Constant.h"
 #include <SD.h>
 

@@ -13,7 +13,7 @@ void ESP8266::reset() {
   logger.info("Resetando ESP8266...");
   println("AT+RST");
 
-  if (readLineUntil("ready\r\n", NULL_STR, 1000, false)) {
+  if (readLineUntil("ready\r\n", NULL_STR, 5000, false)) {
     logger.info("ESP8266 resetado com sucesso!");
   } else {
     logger.info("Não foi possível resetar o ESP8266!");
@@ -44,7 +44,7 @@ String ESP8266::readLine(long timeout) {
     
   s += "\n";
 
-  logger.debug("> " + s);
+  logger.debug(">>> " + s);
   
   return s;
 }

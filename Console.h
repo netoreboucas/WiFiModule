@@ -6,6 +6,11 @@
 class Console {
   public:
     void init();
+    
+    int available();
+
+    String readString();
+    
     void write(byte b);
     void print(char c);
     void print(String s);

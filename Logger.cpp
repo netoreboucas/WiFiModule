@@ -1,4 +1,3 @@
-#include "Console.h"
 #include "Logger.h"
 Logger logger;
 
