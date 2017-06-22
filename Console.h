@@ -11,6 +11,9 @@ class Console {
     void print(String s);
     void println();
     void println(String s);
+
+  private:
+    static HardwareSerial& serial;
 };
 
 extern Console console;

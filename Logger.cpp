@@ -7,10 +7,10 @@ void Logger::init() {
   
   if (ok) {
     lastSizeCheck = millis();
-    console.println(F("SD inicializado com sucesso :-)"));
+    console.println("SD inicializado com sucesso :-)");
     open();
   } else {
-    console.println(F("SD nao inicializado :-("));
+    console.println("SD nao inicializado :-(");
   }
 }
 
@@ -41,7 +41,7 @@ void Logger::open() {
     index++;
   }
   
-  println("New log file: " + fileName);
+  console.println("New log file: " + fileName);
   char buffer[fileName.length() + 1];
   fileName.toCharArray(buffer, sizeof(buffer));
   file = SD.open(buffer, FILE_WRITE);
@@ -117,6 +117,20 @@ void Logger::println(String s) {
   }
   
   console.println(s);
+}
+
+void Logger::info(String s) {
+  #ifdef INFO
+    s.trim();
+    println(" INFO: " + s);
+  #endif
+}
+
+void Logger::debug(String s) {
+  #ifdef DEBUG
+    s.trim();
+    println("DEBUG: " + s);
+  #endif
 }
 
 void Logger::listFiles() {

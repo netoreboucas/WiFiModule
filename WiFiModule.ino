@@ -1,5 +1,6 @@
 #include "Console.h"
 #include "Display.h"
+#include "ESP8266.h"
 #include "Logger.h"
 
 void setup() {
@@ -10,11 +11,18 @@ void setup() {
   display.write("Inicializando...");
   
   logger.init();
+  esp8266.init();
 
   display.write(">>>> Pronto <<<<");
-  console.println("Pronto!");
+  logger.info("Pronto!");
 }
 
 void loop() {
-  
+  if (esp8266.available()) {
+    String s = esp8266.readLine();
+
+    s.trim();
+    display.write(s);
+    //server.processLine(s);
+  }
 }

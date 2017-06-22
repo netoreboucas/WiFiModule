@@ -15,6 +15,7 @@
 #define Logger_h
 
 #include "Arduino.h"
+#include "Constant.h"
 #include <SD.h>
 
 #define PIN_CS 53
@@ -30,6 +31,9 @@ class Logger {
     void print(String s);
     void println();
     void println(String s);
+    
+    void info(String s);
+    void debug(String s);
     
   private:
     boolean ok;

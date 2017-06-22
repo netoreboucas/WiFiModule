@@ -1,7 +1,7 @@
 #include "Console.h"
 Console console;
 
-HardwareSerial & serial = Serial;
+HardwareSerial& Console::serial = Serial;
 
 void Console::init() {
   serial.begin(115200);
