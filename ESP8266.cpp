@@ -9,19 +9,17 @@ void ESP8266::init() {
   reset();
 }
 
-void ESP8266::reset() {
-  logger.info("Resetando ESP8266...");
+boolean ESP8266::reset() {
   println("AT+RST");
-
-  if (readLineUntil("ready\r\n", NULL_STR, 5000, false)) {
-    logger.info("ESP8266 resetado com sucesso!");
-  } else {
-    logger.info("Não foi possível resetar o ESP8266!");
-  }
+  return readLineUntil("ready\r\n", NULL_STR, 5000);
 }
 
 int ESP8266::available() {
   return serial.available();
+}
+
+boolean ESP8266::find(char c) {
+  return serial.find(c);
 }
 
 String ESP8266::read(long timeout) {
@@ -82,6 +80,10 @@ boolean ESP8266::readLineUntil(String success, String error, long timeout, boole
 
 void ESP8266::write(byte b) {
   serial.write(b);
+}
+
+void ESP8266::write(byte b[], int l) {
+  serial.write(b, l);
 }
 
 void ESP8266::print(String s) {

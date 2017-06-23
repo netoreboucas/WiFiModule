@@ -30,7 +30,7 @@ void Logger::open() {
     fileName = String(index);
     while (fileName.length() < 6)
       fileName = "0" + fileName;
-    fileName = fileName + ".LOG";
+    fileName = fileName + ".log";
     
     char buffer[fileName.length() + 1];
     fileName.toCharArray(buffer, sizeof(buffer));
@@ -74,7 +74,7 @@ void Logger::clear(File dir) {
     
     entry.close();
     
-    if (String(entry.name()).endsWith(".LOG")) {
+    if (String(entry.name()).endsWith(".log")) {
       SD.remove(entry.name());
     }
   }

@@ -4,24 +4,35 @@
 #include "Arduino.h"
 #include "ESP8266.h"
 #include "Logger.h"
+#include "SmartHome.h"
 
 class Server {
   public:
     static String ssid;
     static String pwd;
     static String port;
+    
     void init();
     void loadConf();
     void saveConf();
-    void disconnect();
-    String connect(int retry = 0);
-    boolean stopServer();
+    
+    boolean connectToNetwork();
+    boolean disconnectFromNetwork();
+    
     boolean startServer();    
+    boolean stopServer();
+    
     String getIP();
     String getStatus();
-    boolean httpClose();
     
     void processLine(String line);
+
+  private:
+    void processHttpRequest(String channel, String method, String url);
+    void closeHttpResponse(String channel);
+    
+    void sendHttpResponseBuffer(String channel);
+    void createHttpResponseBuffer(String channel, String url);
 };
 
 extern Server server;

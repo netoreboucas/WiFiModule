@@ -4,6 +4,7 @@
 #include "ESP8266.h"
 #include "Logger.h"
 #include "Server.h"
+#include "SmartHome.h"
 
 void setup() {
   console.init();
@@ -15,6 +16,7 @@ void setup() {
   logger.init();
   esp8266.init();
   server.init();
+  smartHome.init();
 
   display.setText(">>>> Pronto <<<<");
   logger.info("Pronto!");
