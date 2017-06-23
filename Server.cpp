@@ -67,7 +67,7 @@ boolean Server::startServer() {
 
 String Server::getIP() {
   esp8266.println("AT+CIFSR");
-  if (esp8266.readLineUntil("%.%", "%ERROR\r\n", 5000)) {
+  if (esp8266.readLineUntil("%.%", "%ERROR\r\n", 5000, true)) {
     String ip = esp8266.readLineUntil_Output;
     ip = ip.substring(ip.indexOf("\"") + 1, ip.lastIndexOf("\""));
     return ip;
@@ -103,6 +103,7 @@ void Server::processLine(String line) {
 
 void Server::processHttpRequest(String channel, String method, String url) {
   logger.info("HTTP REQUEST: Channel[" + channel + "] Method[" + method + "] Url[" + url + "]");
+  display.setText(method, url);
   
   esp8266.read(1000);
   createHttpResponseBuffer(channel, url);

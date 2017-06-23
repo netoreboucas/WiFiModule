@@ -2,6 +2,7 @@
 #define Server_h
 
 #include "Arduino.h"
+#include "Display.h"
 #include "ESP8266.h"
 #include "Logger.h"
 #include "SmartHome.h"
