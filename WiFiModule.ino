@@ -20,6 +20,8 @@ void setup() {
 
   display.setText(">>>> Pronto <<<<");
   logger.info("Pronto!");
+
+  server.startServer();
 }
 
 void loop() {
