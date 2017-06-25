@@ -185,21 +185,21 @@ void Server::createHttpResponseBuffer(String channel, String url) {
       response.print(F("["));
       
       if (smartHome.isOn(RED)) {
-        response.print(F(  "{ \"id\":\"red\", \"action\":\"/led/off/red\", \"classI\":\"fa-thumbs-o-up\" },"));
+        response.print(F(  "{ \"id\":\"red\", \"action\":\"/led/off/red\", \"classI\":\"fa-thumbs-up\" },"));
       } else {
-        response.print(F(  "{ \"id\":\"red\", \"action\":\"/led/on/red\", \"classI\":\"fa-thumbs-o-down\" },"));
+        response.print(F(  "{ \"id\":\"red\", \"action\":\"/led/on/red\", \"classI\":\"fa-thumbs-down\" },"));
       }
       
       if (smartHome.isOn(YELLOW)) {
-        response.print(F(  "{ \"id\":\"yellow\", \"action\":\"/led/off/yellow\", \"classI\":\"fa-thumbs-o-up\" },"));
+        response.print(F(  "{ \"id\":\"yellow\", \"action\":\"/led/off/yellow\", \"classI\":\"fa-thumbs-up\" },"));
       } else {
-        response.print(F(  "{ \"id\":\"yellow\", \"action\":\"/led/on/yellow\", \"classI\":\"fa-thumbs-o-down\" },"));
+        response.print(F(  "{ \"id\":\"yellow\", \"action\":\"/led/on/yellow\", \"classI\":\"fa-thumbs-down\" },"));
       }
       
       if (smartHome.isOn(GREEN)) {
-        response.print(F(  "{ \"id\":\"green\", \"action\":\"/led/off/green\", \"classI\":\"fa-thumbs-o-up\" }"));
+        response.print(F(  "{ \"id\":\"green\", \"action\":\"/led/off/green\", \"classI\":\"fa-thumbs-up\" }"));
       } else {
-        response.print(F(  "{ \"id\":\"green\", \"action\":\"/led/on/green\", \"classI\":\"fa-thumbs-o-down\" }"));
+        response.print(F(  "{ \"id\":\"green\", \"action\":\"/led/on/green\", \"classI\":\"fa-thumbs-down\" }"));
       }
       
       response.print(F("]"));
@@ -242,44 +242,54 @@ void Server::createHttpResponseBuffer(String channel, String url) {
       response.print(F(  "<body style='padding-bottom: 70px;'>"));
       response.print(F(    "<div class='container'>"));
       response.print(F(      "<h1><i class='fa fa-home' onclick='window.location=\"/\";'></i> Smart Home :-)</h1><br/>"));
+
+      response.print(F(      "<div class='row'>"));
       
+      response.print(F(        "<div class='col-xs-4'>"));
       if (smartHome.isOn(RED)) {
-        response.print(F(      "<button id='red' action='/led/off/red' type='button' class='btn btn-lg btn-block btn-danger'>"));
-        response.print(F(        "<i class='fa fa-thumbs-o-up'></i>"));
-        response.print(F(      "</button><br/>"));
+        response.print(F(          "<button id='red' action='/led/off/red' type='button' class='btn btn-lg btn-block btn-danger'>"));
+        response.print(F(            "<i class='fa fa-thumbs-up'></i>"));
+        response.print(F(          "</button>"));
       } else {
-        response.print(F(      "<button id='red' action='/led/on/red' type='button' class='btn btn-lg btn-block btn-danger'>"));
-        response.print(F(        "<i class='fa fa-thumbs-o-down'></i>"));
-        response.print(F(      "</button><br/>"));
+        response.print(F(         "<button id='red' action='/led/on/red' type='button' class='btn btn-lg btn-block btn-danger'>"));
+        response.print(F(            "<i class='fa fa-thumbs-down'></i>"));
+        response.print(F(          "</button>"));
       }
-      
+      response.print(F(        "</div>"));
+
+      response.print(F(        "<div class='col-xs-4'>"));
       if (smartHome.isOn(YELLOW)) {
-        response.print(F(      "<button id='yellow' action='/led/off/yellow' type='button' class='btn btn-lg btn-block btn-warning'>"));
-        response.print(F(        "<i class='fa fa-thumbs-o-up'></i>"));
-        response.print(F(      "</button><br/>"));
+        response.print(F(          "<button id='yellow' action='/led/off/yellow' type='button' class='btn btn-lg btn-block btn-warning'>"));
+        response.print(F(            "<i class='fa fa-thumbs-up'></i>"));
+        response.print(F(          "</button>"));
       } else {
-        response.print(F(      "<button id='yellow' action='/led/on/yellow' type='button' class='btn btn-lg btn-block btn-warning'>"));
-        response.print(F(        "<i class='fa fa-thumbs-o-down'></i>"));
-        response.print(F(      "</button><br/>"));
+        response.print(F(          "<button id='yellow' action='/led/on/yellow' type='button' class='btn btn-lg btn-block btn-warning'>"));
+        response.print(F(            "<i class='fa fa-thumbs-down'></i>"));
+        response.print(F(          "</button>"));
       }
-      
+      response.print(F(        "</div>"));
+
+      response.print(F(        "<div class='col-xs-4'>"));
       if (smartHome.isOn(GREEN)) {
-        response.print(F(      "<button id='green' action='/led/off/green' type='button' class='btn btn-lg btn-block btn-success'>"));
-        response.print(F(        "<i class='fa fa-thumbs-o-up'></i>"));
-        response.print(F(      "</button><br/>"));
+        response.print(F(          "<button id='green' action='/led/off/green' type='button' class='btn btn-lg btn-block btn-success'>"));
+        response.print(F(            "<i class='fa fa-thumbs-up'></i>"));
+        response.print(F(          "</button>"));
       } else {
-        response.print(F(      "<button id='green' action='/led/on/green' type='button' class='btn btn-lg btn-block btn-success'>"));
-        response.print(F(        "<i class='fa fa-thumbs-o-down'></i>"));
-        response.print(F(      "</button><br/>"));
+        response.print(F(          "<button id='green' action='/led/on/green' type='button' class='btn btn-lg btn-block btn-success'>"));
+        response.print(F(            "<i class='fa fa-thumbs-down'></i>"));
+        response.print(F(          "</button>"));
       }
+      response.print(F(        "</div>"));
+
+      response.print(F(        "</div>"));
       
       response.print(F(      "<hr/>"));
       
       response.print(F(      "<button id='all' action='/led/on/all' type='button' class='btn btn-lg btn-block btn-default'>"));
-      response.print(F(        "<i class='fa fa-thumbs-o-up'></i> Ligar todos os LEDs"));
+      response.print(F(        "<i class='fa fa-thumbs-up'></i> Ligar todos os LEDs"));
       response.print(F(      "</button><br/>"));
       response.print(F(      "<button id='all' action='/led/off/all' type='button' class='btn btn-lg btn-block btn-default'>"));
-      response.print(F(        "<i class='fa fa-thumbs-o-down'></i> Desligar todos os LEDs"));
+      response.print(F(        "<i class='fa fa-thumbs-down'></i> Desligar todos os LEDs"));
       response.print(F(      "</button>"));
       
       response.print(F(    "</div>"));
@@ -366,51 +376,51 @@ void Server::createHttpResponseBuffer(String channel, String url) {
       response.print(F("["));
       
       if (smartHome.isOn(RELE_1)) {
-        response.print(F(  "{ \"id\":\"r1\", \"action\":\"/rele/off/r1\", \"classB\":\"btn-success\", \"classI\":\"fa-thumbs-o-up\" },"));
+        response.print(F(  "{ \"id\":\"r1\", \"action\":\"/rele/off/r1\", \"classB\":\"btn-success\", \"classI\":\"fa-thumbs-up\" },"));
       } else {
-        response.print(F(  "{ \"id\":\"r1\", \"action\":\"/rele/on/r1\", \"classB\":\"btn-danger\", \"classI\":\"fa-thumbs-o-down\" },"));
+        response.print(F(  "{ \"id\":\"r1\", \"action\":\"/rele/on/r1\", \"classB\":\"btn-danger\", \"classI\":\"fa-thumbs-down\" },"));
       }
       
       if (smartHome.isOn(RELE_2)) {
-        response.print(F(  "{ \"id\":\"r2\", \"action\":\"/rele/off/r2\", \"classB\":\"btn-success\", \"classI\":\"fa-thumbs-o-up\" },"));
+        response.print(F(  "{ \"id\":\"r2\", \"action\":\"/rele/off/r2\", \"classB\":\"btn-success\", \"classI\":\"fa-thumbs-up\" },"));
       } else {
-        response.print(F(  "{ \"id\":\"r2\", \"action\":\"/rele/on/r2\", \"classB\":\"btn-danger\", \"classI\":\"fa-thumbs-o-down\" },"));
+        response.print(F(  "{ \"id\":\"r2\", \"action\":\"/rele/on/r2\", \"classB\":\"btn-danger\", \"classI\":\"fa-thumbs-down\" },"));
       }
       
       if (smartHome.isOn(RELE_3)) {
-        response.print(F(  "{ \"id\":\"r3\", \"action\":\"/rele/off/r3\", \"classB\":\"btn-success\", \"classI\":\"fa-thumbs-o-up\" },"));
+        response.print(F(  "{ \"id\":\"r3\", \"action\":\"/rele/off/r3\", \"classB\":\"btn-success\", \"classI\":\"fa-thumbs-up\" },"));
       } else {
-        response.print(F(  "{ \"id\":\"r3\", \"action\":\"/rele/on/r3\", \"classB\":\"btn-danger\", \"classI\":\"fa-thumbs-o-down\" },"));
+        response.print(F(  "{ \"id\":\"r3\", \"action\":\"/rele/on/r3\", \"classB\":\"btn-danger\", \"classI\":\"fa-thumbs-down\" },"));
       }
       
       if (smartHome.isOn(RELE_4)) {
-        response.print(F(  "{ \"id\":\"r4\", \"action\":\"/rele/off/r4\", \"classB\":\"btn-success\", \"classI\":\"fa-thumbs-o-up\" },"));
+        response.print(F(  "{ \"id\":\"r4\", \"action\":\"/rele/off/r4\", \"classB\":\"btn-success\", \"classI\":\"fa-thumbs-up\" },"));
       } else {
-        response.print(F(  "{ \"id\":\"r4\", \"action\":\"/rele/on/r4\", \"classB\":\"btn-danger\", \"classI\":\"fa-thumbs-o-down\" },"));
+        response.print(F(  "{ \"id\":\"r4\", \"action\":\"/rele/on/r4\", \"classB\":\"btn-danger\", \"classI\":\"fa-thumbs-down\" },"));
       }
       
       if (smartHome.isOn(RELE_5)) {
-        response.print(F(  "{ \"id\":\"r5\", \"action\":\"/rele/off/r5\", \"classB\":\"btn-success\", \"classI\":\"fa-thumbs-o-up\" },"));
+        response.print(F(  "{ \"id\":\"r5\", \"action\":\"/rele/off/r5\", \"classB\":\"btn-success\", \"classI\":\"fa-thumbs-up\" },"));
       } else {
-        response.print(F(  "{ \"id\":\"r5\", \"action\":\"/rele/on/r5\", \"classB\":\"btn-danger\", \"classI\":\"fa-thumbs-o-down\" },"));
+        response.print(F(  "{ \"id\":\"r5\", \"action\":\"/rele/on/r5\", \"classB\":\"btn-danger\", \"classI\":\"fa-thumbs-down\" },"));
       }
       
       if (smartHome.isOn(RELE_6)) {
-        response.print(F(  "{ \"id\":\"r6\", \"action\":\"/rele/off/r6\", \"classB\":\"btn-success\", \"classI\":\"fa-thumbs-o-up\" },"));
+        response.print(F(  "{ \"id\":\"r6\", \"action\":\"/rele/off/r6\", \"classB\":\"btn-success\", \"classI\":\"fa-thumbs-up\" },"));
       } else {
-        response.print(F(  "{ \"id\":\"r6\", \"action\":\"/rele/on/r6\", \"classB\":\"btn-danger\", \"classI\":\"fa-thumbs-o-down\" },"));
+        response.print(F(  "{ \"id\":\"r6\", \"action\":\"/rele/on/r6\", \"classB\":\"btn-danger\", \"classI\":\"fa-thumbs-down\" },"));
       }
       
       if (smartHome.isOn(RELE_7)) {
-        response.print(F(  "{ \"id\":\"r7\", \"action\":\"/rele/off/r7\", \"classB\":\"btn-success\", \"classI\":\"fa-thumbs-o-up\" },"));
+        response.print(F(  "{ \"id\":\"r7\", \"action\":\"/rele/off/r7\", \"classB\":\"btn-success\", \"classI\":\"fa-thumbs-up\" },"));
       } else {
-        response.print(F(  "{ \"id\":\"r7\", \"action\":\"/rele/on/r7\", \"classB\":\"btn-danger\", \"classI\":\"fa-thumbs-o-down\" },"));
+        response.print(F(  "{ \"id\":\"r7\", \"action\":\"/rele/on/r7\", \"classB\":\"btn-danger\", \"classI\":\"fa-thumbs-down\" },"));
       }
       
       if (smartHome.isOn(RELE_8)) {
-        response.print(F(  "{ \"id\":\"r8\", \"action\":\"/rele/off/r8\", \"classB\":\"btn-success\", \"classI\":\"fa-thumbs-o-up\" }"));
+        response.print(F(  "{ \"id\":\"r8\", \"action\":\"/rele/off/r8\", \"classB\":\"btn-success\", \"classI\":\"fa-thumbs-up\" }"));
       } else {
-        response.print(F(  "{ \"id\":\"r8\", \"action\":\"/rele/on/r8\", \"classB\":\"btn-danger\", \"classI\":\"fa-thumbs-o-down\" }"));
+        response.print(F(  "{ \"id\":\"r8\", \"action\":\"/rele/on/r8\", \"classB\":\"btn-danger\", \"classI\":\"fa-thumbs-down\" }"));
       }
       
       response.print(F("]"));
@@ -456,101 +466,118 @@ void Server::createHttpResponseBuffer(String channel, String url) {
       response.print(F(      "<h1><i class='fa fa-home' onclick='window.location=\"/\";'></i> Smart Home :-)</h1><br/>"));
     
       response.print(F(      "<div class='row'>"));
+      
       response.print(F(        "<div class='col-xs-4'>"));
       if (smartHome.isOn(RELE_1)) {
         response.print(F(          "<button id='r1' action='/rele/off/r1' type='button' class='btn btn-lg btn-block btn-success'>"));
-        response.print(F(            "<i class='fa fa-thumbs-o-up'></i> <span class='badge'>1</span>"));
+        response.print(F(            "<i class='fa fa-thumbs-up'></i> <span class='badge'>1</span>"));
+        response.print(F(          "</button>"));
       } else {
         response.print(F(          "<button id='r1' action='/rele/on/r1' type='button' class='btn btn-lg btn-block btn-danger'>"));
-        response.print(F(            "<i class='fa fa-thumbs-o-down'></i> <span class='badge'>1</span>"));
+        response.print(F(            "<i class='fa fa-thumbs-down'></i> <span class='badge'>1</span>"));
+        response.print(F(          "</button>"));
       }
-      response.print(F(          "</button>"));
       response.print(F(        "</div>"));
+      
       response.print(F(        "<div class='col-xs-4'>"));
       if (smartHome.isOn(RELE_2)) {
         response.print(F(          "<button id='r2' action='/rele/off/r2' type='button' class='btn btn-lg btn-block btn-success'>"));
-        response.print(F(            "<i class='fa fa-thumbs-o-up'></i> <span class='badge'>2</span>"));
+        response.print(F(            "<i class='fa fa-thumbs-up'></i> <span class='badge'>2</span>"));
+        response.print(F(          "</button>"));
       } else {
         response.print(F(          "<button id='r2' action='/rele/on/r2' type='button' class='btn btn-lg btn-block btn-danger'>"));
-        response.print(F(            "<i class='fa fa-thumbs-o-down'></i> <span class='badge'>2</span>"));
+        response.print(F(            "<i class='fa fa-thumbs-down'></i> <span class='badge'>2</span>"));
+        response.print(F(          "</button>"));
       }
-      response.print(F(          "</button>"));
       response.print(F(        "</div>"));
+      
       response.print(F(        "<div class='col-xs-4'>"));
       if (smartHome.isOn(RELE_3)) {
         response.print(F(          "<button id='r3' action='/rele/off/r3' type='button' class='btn btn-lg btn-block btn-success'>"));
-        response.print(F(            "<i class='fa fa-thumbs-o-up'></i> <span class='badge'>3</span>"));
+        response.print(F(            "<i class='fa fa-thumbs-up'></i> <span class='badge'>3</span>"));
+        response.print(F(          "</button>"));
       } else {
         response.print(F(          "<button id='r3' action='/rele/on/r3' type='button' class='btn btn-lg btn-block btn-danger'>"));
-        response.print(F(            "<i class='fa fa-thumbs-o-down'></i> <span class='badge'>3</span>"));
+        response.print(F(            "<i class='fa fa-thumbs-down'></i> <span class='badge'>3</span>"));
+        response.print(F(          "</button>"));
       }
-      response.print(F(          "</button>"));
       response.print(F(        "</div>"));
-      response.print(F(      "</div><br/>"));
       
+      response.print(F(      "</div><br/>"));
       response.print(F(      "<div class='row'>"));
+      
       response.print(F(        "<div class='col-xs-4'>"));
       if (smartHome.isOn(RELE_4)) {
         response.print(F(          "<button id='r4' action='/rele/off/r4' type='button' class='btn btn-lg btn-block btn-success'>"));
-        response.print(F(            "<i class='fa fa-thumbs-o-up'></i> <span class='badge'>4</span>"));
+        response.print(F(            "<i class='fa fa-thumbs-up'></i> <span class='badge'>4</span>"));
+        response.print(F(          "</button>"));
       } else {
         response.print(F(          "<button id='r4' action='/rele/on/r4' type='button' class='btn btn-lg btn-block btn-danger'>"));
-        response.print(F(            "<i class='fa fa-thumbs-o-down'></i> <span class='badge'>4</span>"));
+        response.print(F(            "<i class='fa fa-thumbs-down'></i> <span class='badge'>4</span>"));
+        response.print(F(          "</button>"));
       }
-      response.print(F(          "</button>"));
       response.print(F(        "</div>"));
+      
       response.print(F(        "<div class='col-xs-4'>"));
       if (smartHome.isOn(RELE_5)) {
         response.print(F(          "<button id='r5' action='/rele/off/r5' type='button' class='btn btn-lg btn-block btn-success'>"));
-        response.print(F(            "<i class='fa fa-thumbs-o-up'></i> <span class='badge'>5</span>"));
+        response.print(F(            "<i class='fa fa-thumbs-up'></i> <span class='badge'>5</span>"));
+        response.print(F(          "</button>"));
       } else {
         response.print(F(          "<button id='r5' action='/rele/on/r5' type='button' class='btn btn-lg btn-block btn-danger'>"));
-        response.print(F(            "<i class='fa fa-thumbs-o-down'></i> <span class='badge'>5</span>"));
+        response.print(F(            "<i class='fa fa-thumbs-down'></i> <span class='badge'>5</span>"));
+        response.print(F(          "</button>"));
       }
-      response.print(F(          "</button>"));
       response.print(F(        "</div>"));
+      
       response.print(F(        "<div class='col-xs-4'>"));
       if (smartHome.isOn(RELE_6)) {
         response.print(F(          "<button id='r6' action='/rele/off/r6' type='button' class='btn btn-lg btn-block btn-success'>"));
-        response.print(F(            "<i class='fa fa-thumbs-o-up'></i> <span class='badge'>6</span>"));
+        response.print(F(            "<i class='fa fa-thumbs-up'></i> <span class='badge'>6</span>"));
+        response.print(F(          "</button>"));
       } else {
         response.print(F(          "<button id='r6' action='/rele/on/r6' type='button' class='btn btn-lg btn-block btn-danger'>"));
-        response.print(F(            "<i class='fa fa-thumbs-o-down'></i> <span class='badge'>6</span>"));
+        response.print(F(            "<i class='fa fa-thumbs-down'></i> <span class='badge'>6</span>"));
+        response.print(F(          "</button>"));
       }
-      response.print(F(          "</button>"));
       response.print(F(        "</div>"));
-      response.print(F(      "</div><br/>"));
       
+      response.print(F(      "</div><br/>"));
       response.print(F(      "<div class='row'>"));
+      
       response.print(F(        "<div class='col-xs-4'>"));
       if (smartHome.isOn(RELE_7)) {
         response.print(F(          "<button id='r7' action='/rele/off/r7' type='button' class='btn btn-lg btn-block btn-success'>"));
-        response.print(F(            "<i class='fa fa-thumbs-o-up'></i> <span class='badge'>7</span>"));
+        response.print(F(            "<i class='fa fa-thumbs-up'></i> <span class='badge'>7</span>"));
+        response.print(F(          "</button>"));
       } else {
         response.print(F(          "<button id='r7' action='/rele/on/r7' type='button' class='btn btn-lg btn-block btn-danger'>"));
-        response.print(F(            "<i class='fa fa-thumbs-o-down'></i> <span class='badge'>7</span>"));
+        response.print(F(            "<i class='fa fa-thumbs-down'></i> <span class='badge'>7</span>"));
+        response.print(F(          "</button>"));
       }
-      response.print(F(          "</button>"));
       response.print(F(        "</div>"));
+      
       response.print(F(        "<div class='col-xs-4'>"));
       if (smartHome.isOn(RELE_8)) {
         response.print(F(          "<button id='r8' action='/rele/off/r8' type='button' class='btn btn-lg btn-block btn-success'>"));
-        response.print(F(            "<i class='fa fa-thumbs-o-up'></i> <span class='badge'>8</span>"));
+        response.print(F(            "<i class='fa fa-thumbs-up'></i> <span class='badge'>8</span>"));
+        response.print(F(          "</button>"));
       } else {
         response.print(F(          "<button id='r8' action='/rele/on/r8' type='button' class='btn btn-lg btn-block btn-danger'>"));
-        response.print(F(            "<i class='fa fa-thumbs-o-down'></i> <span class='badge'>8</span>"));
+        response.print(F(            "<i class='fa fa-thumbs-down'></i> <span class='badge'>8</span>"));
+        response.print(F(          "</button>"));
       }
-      response.print(F(          "</button>"));
       response.print(F(        "</div>"));
+      
       response.print(F(      "</div>"));
       
       response.print(F(      "<hr/>"));
       
       response.print(F(      "<button id='all' action='/rele/on/all' type='button' class='btn btn-lg btn-block btn-default'>"));
-      response.print(F(        "<i class='fa fa-thumbs-o-up'></i> Ligar todos os Reles"));
+      response.print(F(        "<i class='fa fa-thumbs-up'></i> Ligar todos os Reles"));
       response.print(F(      "</button><br/>"));
       response.print(F(      "<button id='all' action='/rele/off/all' type='button' class='btn btn-lg btn-block btn-default'>"));
-      response.print(F(        "<i class='fa fa-thumbs-o-down'></i> Desligar todos os Reles"));
+      response.print(F(        "<i class='fa fa-thumbs-down'></i> Desligar todos os Reles"));
       response.print(F(      "</button>"));
       
       response.print(F(    "</div>"));
