@@ -29,9 +29,10 @@ class ESP8266 {
 
     boolean find(char c);
 
-    String read(long timeout = DEFAULT_TIMEOUT);
+    byte read();
+    String readUntil(char c, long timeout = DEFAULT_TIMEOUT);
     String readLine(long timeout = DEFAULT_TIMEOUT);
-    boolean readLineUntil(String success, String error, long timeout = DEFAULT_TIMEOUT, boolean discardOver = false);
+    boolean readLineUntil(String success, String error, long timeout = DEFAULT_TIMEOUT);
     
     void write(byte b);
     void write(byte b[], int l);

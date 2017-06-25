@@ -10,7 +10,7 @@
 
 class Commander {
   public:
-    String execute(String command, boolean waitResponse = false);
+    String execute(String command);
 };
 
 extern Commander commander;

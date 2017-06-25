@@ -1,7 +1,7 @@
 #include "Commander.h"
 Commander commander;
 
-String Commander::execute(String command, boolean waitResponse) {
+String Commander::execute(String command) {
   String response = "NULL";
   logger.debug("Command: " + command);
   
@@ -48,7 +48,7 @@ String Commander::execute(String command, boolean waitResponse) {
     response = String(util.freeMemory()) + " bytes";
   } else if (command.startsWith("AT")) {
     esp8266.println(command);
-    response = waitResponse ? esp8266.read(1000) : "NONE";
+    response = "...";
   } else {
     response = "Comando invalido";
   }

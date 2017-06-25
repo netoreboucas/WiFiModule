@@ -67,7 +67,7 @@ boolean Server::startServer() {
 
 String Server::getIP() {
   esp8266.println("AT+CIFSR");
-  if (esp8266.readLineUntil("%.%", "%ERROR\r\n", 5000, true)) {
+  if (esp8266.readLineUntil("%.%", "%ERROR\r\n", 5000)) {
     String ip = esp8266.readLineUntil_Output;
     ip = ip.substring(ip.indexOf("\"") + 1, ip.lastIndexOf("\""));
     return ip;
@@ -90,12 +90,19 @@ void Server::processLine(String line) {
     line = line.substring(5); // remove "+IPD,"
     
     String channel = line.substring(0, line.indexOf(","));
-    line = line.substring(line.indexOf(":") + 1); // remove "<channel>,123,:"
+    line = line.substring(line.indexOf(",") + 1); // remove "<channel>,"
+
+    int length = line.substring(0, line.indexOf(",")).toInt();
+    line = line.substring(line.indexOf(":") + 1); // remove "<length>:"
     
     String method = line.substring(0, line.indexOf(" "));
     line = line.substring(method.length() + 1); // remove "<method> "
     
     String url = line.substring(0, line.lastIndexOf(" "));
+
+    for (int i = 0; i < length; i++) {
+      console.write(esp8266.read());
+    }
 
     processHttpRequest(channel, method, url);
   }
@@ -104,8 +111,7 @@ void Server::processLine(String line) {
 void Server::processHttpRequest(String channel, String method, String url) {
   logger.info("HTTP REQUEST: Channel[" + channel + "] Method[" + method + "] Url[" + url + "]");
   display.setText(method, url);
-  
-  esp8266.read(1000);
+
   createHttpResponseBuffer(channel, url);
   sendHttpResponseBuffer(channel);
   closeHttpResponse(channel);
@@ -125,14 +131,16 @@ void Server::sendHttpResponseBuffer(String channel) {
     while (response.available() > 0) {
       int length = min(MAX_CIPSEND_LENGTH, response.available());
       byte buffer[length];
-      
+
       esp8266.println("AT+CIPSEND=" + channel + "," + String(length));
-      if (esp8266.find('>')) {
+      if (esp8266.readUntil('>', 10000)) {
         response.readBytes(buffer, length);
         esp8266.write(buffer, length);
         if (!esp8266.readLineUntil("%SEND OK%", "%SEND FAIL%", 10000)) {
           break;
         }
+      } else {
+        console.println("@@@");
       }
     }
     

@@ -22,13 +22,20 @@ boolean ESP8266::find(char c) {
   return serial.find(c);
 }
 
-String ESP8266::read(long timeout) {
+byte ESP8266::read() {
+  return serial.read();
+}
+
+String ESP8266::readUntil(char c, long timeout) {
   serial.setTimeout(timeout);
-  String s = serial.readString();
-  
-  if (s.length() > 0) {
-    logger.debug("---\r\n" + s + "\r\n---");
-  }
+  String s = serial.readStringUntil(c);
+
+  if (s.length() == 0)
+    return NULL_STR;
+    
+  s += c;
+    
+  logger.debug(">>> " + s);
   
   return s;
 }
@@ -47,7 +54,7 @@ String ESP8266::readLine(long timeout) {
   return s;
 }
 
-boolean ESP8266::readLineUntil(String success, String error, long timeout, boolean discardOver) {
+boolean ESP8266::readLineUntil(String success, String error, long timeout) {
   boolean found = false;
 
   String line = readLine(timeout);
@@ -71,9 +78,6 @@ boolean ESP8266::readLineUntil(String success, String error, long timeout, boole
     
     line = readLine(timeout);
   }
-  
-  if (discardOver)
-    read(500); 
   
   return found;
 }
