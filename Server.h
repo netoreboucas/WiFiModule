@@ -34,6 +34,8 @@ class Server {
     
     void sendHttpResponseBuffer(String channel);
     void createHttpResponseBuffer(String channel, String url);
+    void writeHead(File response);
+    void writeFooter(File response);
 };
 
 extern Server server;

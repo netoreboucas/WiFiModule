@@ -1,8 +1,8 @@
 #include "Server.h"
 Server server;
 
-String Server::ssid = "netoreboucas";
-String Server::pwd = "a192168085";
+String Server::ssid = "...";
+String Server::pwd = "...";
 String Server::port = "80";
 
 void Server::init() {
@@ -133,7 +133,9 @@ void Server::sendHttpResponseBuffer(String channel) {
         response.readBytes(buffer, length);
         esp8266.write(buffer, length);
         count += length;
-        esp8266.readLineUntil("%SEND OK%", "%SEND FAIL%", 10000);
+        if (!esp8266.readLineUntil("%SEND OK%", "%SEND FAIL%", 10000)) {
+          break;
+        }
       }
     }
     
@@ -183,56 +185,54 @@ void Server::createHttpResponseBuffer(String channel, String url) {
       response.print(F("["));
       
       if (smartHome.isOn(RED)) {
-        response.print(F(  "{ \"id\":\"red\", \"action\":\"/led/off/red\", \"removeClass\":\"fa-thumbs-o-down\", \"addClass\":\"fa-thumbs-o-up\" },"));
+        response.print(F(  "{ \"id\":\"red\", \"action\":\"/led/off/red\", \"classI\":\"fa-thumbs-o-up\" },"));
       } else {
-        response.print(F(  "{ \"id\":\"red\", \"action\":\"/led/on/red\", \"removeClass\":\"fa-thumbs-o-up\", \"addClass\":\"fa-thumbs-o-down\" },"));
+        response.print(F(  "{ \"id\":\"red\", \"action\":\"/led/on/red\", \"classI\":\"fa-thumbs-o-down\" },"));
       }
       
       if (smartHome.isOn(YELLOW)) {
-        response.print(F(  "{ \"id\":\"yellow\", \"action\":\"/led/off/yellow\", \"removeClass\":\"fa-thumbs-o-down\", \"addClass\":\"fa-thumbs-o-up\" },"));
+        response.print(F(  "{ \"id\":\"yellow\", \"action\":\"/led/off/yellow\", \"classI\":\"fa-thumbs-o-up\" },"));
       } else {
-        response.print(F(  "{ \"id\":\"yellow\", \"action\":\"/led/on/yellow\", \"removeClass\":\"fa-thumbs-o-up\", \"addClass\":\"fa-thumbs-o-down\" },"));
+        response.print(F(  "{ \"id\":\"yellow\", \"action\":\"/led/on/yellow\", \"classI\":\"fa-thumbs-o-down\" },"));
       }
       
       if (smartHome.isOn(GREEN)) {
-        response.print(F(  "{ \"id\":\"green\", \"action\":\"/led/off/green\", \"removeClass\":\"fa-thumbs-o-down\", \"addClass\":\"fa-thumbs-o-up\" }"));
+        response.print(F(  "{ \"id\":\"green\", \"action\":\"/led/off/green\", \"classI\":\"fa-thumbs-o-up\" }"));
       } else {
-        response.print(F(  "{ \"id\":\"green\", \"action\":\"/led/on/green\", \"removeClass\":\"fa-thumbs-o-up\", \"addClass\":\"fa-thumbs-o-down\" }"));
+        response.print(F(  "{ \"id\":\"green\", \"action\":\"/led/on/green\", \"classI\":\"fa-thumbs-o-down\" }"));
       }
       
       response.print(F("]"));
     } else {
       response.print(F("<html>"));
       response.print(F(  "<head>"));
-      response.print(F(    "<meta name='viewport' content='width=device-width'>"));
-      response.print(F(    "<link rel='stylesheet' href='http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css'>"));
-      response.print(F(    "<link rel='stylesheet' href='http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css'>"));
-      response.print(F(    "<link rel='stylesheet' href='http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css'>"));
-      response.print(F(    "<link rel='shortcut icon' href='http://arduino.cc/favicon.ico'>"));
-      response.print(F(    "<style>"));
-      response.print(F(      ".btn:focus { outline: none; }"));
-      response.print(F(    "</style>"));
-      response.print(F(    "<script src='http://code.jquery.com/jquery-2.1.0.min.js'></script>"));
-      response.print(F(    "<script src='http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js'></script>"));
+      
+      writeHead(response);
+      
       response.print(F(    "<script>"));
       response.print(F(      "$(function() {"));
       response.print(F(        "$('.btn').click(function() {"));
-      response.print(F(          "$('#loading').modal({ backdrop: 'static', keyboard: 'false' });"));
+      response.print(F(          "var $btn = $(this);"));
+      response.print(F(          "var $i = $btn.find('i');"));
+      response.print(F(          "var bkpClassB = $btn.attr('class');"));
+      response.print(F(          "var bkpClassI = $i.attr('class');"));
+      response.print(F(          "$btn.attr('class', 'btn btn-lg btn-block btn-default disabled');"));
+      response.print(F(          "$i.attr('class', 'fa fa-cog fa-spin');"));
       response.print(F(          "$.ajax({"));
       response.print(F(            "dataType: 'json',"));
       response.print(F(            "url: $(this).attr('action'),"));
+      response.print(F(            "timeout: 5000,"));
       response.print(F(            "success: function(data) {"));
+      response.print(F(              "$btn.attr('class', bkpClassB);"));
+      response.print(F(              "$i.attr('class', bkpClassI);"));
       response.print(F(              "$.each(data, function() {"));
       response.print(F(                "if (this.action != null) $('#' + this.id).attr('action', this.action);"));
-      response.print(F(                "if (this.removeClass != null) $('#' + this.id).find('i').removeClass(this.removeClass);"));
-      response.print(F(                "if (this.addClass != null) $('#' + this.id).find('i').addClass(this.addClass);"));
+      response.print(F(                "if (this.classI != null) $('#' + this.id).find('i').removeClass().addClass('fa').addClass(this.classI);"));
       response.print(F(              "});"));
       response.print(F(            "},"));
       response.print(F(            "error: function() {"));
-      response.print(F(              "console.log('error');"));
-      response.print(F(            "},"));
-      response.print(F(            "complete: function() {"));
-      response.print(F(              "$('#loading').modal('hide');"));
+      response.print(F(              "$btn.attr('class', bkpClassB);"));
+      response.print(F(              "$i.attr('class', bkpClassI);"));
       response.print(F(            "}"));
       response.print(F(          "});"));
       response.print(F(        "});"));
@@ -246,27 +246,32 @@ void Server::createHttpResponseBuffer(String channel, String url) {
       if (smartHome.isOn(RED)) {
         response.print(F(      "<button id='red' action='/led/off/red' type='button' class='btn btn-lg btn-block btn-danger'>"));
         response.print(F(        "<i class='fa fa-thumbs-o-up'></i>"));
+        response.print(F(      "</button><br/>"));
       } else {
         response.print(F(      "<button id='red' action='/led/on/red' type='button' class='btn btn-lg btn-block btn-danger'>"));
         response.print(F(        "<i class='fa fa-thumbs-o-down'></i>"));
+        response.print(F(      "</button><br/>"));
       }
-      response.print(F(      "</button><br/>"));
+      
       if (smartHome.isOn(YELLOW)) {
         response.print(F(      "<button id='yellow' action='/led/off/yellow' type='button' class='btn btn-lg btn-block btn-warning'>"));
         response.print(F(        "<i class='fa fa-thumbs-o-up'></i>"));
+        response.print(F(      "</button><br/>"));
       } else {
         response.print(F(      "<button id='yellow' action='/led/on/yellow' type='button' class='btn btn-lg btn-block btn-warning'>"));
         response.print(F(        "<i class='fa fa-thumbs-o-down'></i>"));
+        response.print(F(      "</button><br/>"));
       }
-      response.print(F(      "</button><br/>"));
+      
       if (smartHome.isOn(GREEN)) {
         response.print(F(      "<button id='green' action='/led/off/green' type='button' class='btn btn-lg btn-block btn-success'>"));
         response.print(F(        "<i class='fa fa-thumbs-o-up'></i>"));
+        response.print(F(      "</button><br/>"));
       } else {
         response.print(F(      "<button id='green' action='/led/on/green' type='button' class='btn btn-lg btn-block btn-success'>"));
         response.print(F(        "<i class='fa fa-thumbs-o-down'></i>"));
+        response.print(F(      "</button><br/>"));
       }
-      response.print(F(      "</button>"));
       
       response.print(F(      "<hr/>"));
       
@@ -279,23 +284,7 @@ void Server::createHttpResponseBuffer(String channel, String url) {
       
       response.print(F(    "</div>"));
       
-      response.print(F(    "<div id='loading' class='modal fade'>"));
-      response.print(F(      "<div class='modal-dialog modal-sm'>"));
-      response.print(F(        "<div class='modal-content'>"));
-      response.print(F(          "<div class='modal-body'>"));
-      response.print(F(            "<i class='fa fa-refresh fa-spin'></i> Aguarde..."));
-      response.print(F(          "</div>"));
-      response.print(F(        "</div>"));
-      response.print(F(      "</div>"));
-      response.print(F(    "</div>"));
-      
-      response.print(F(    "<div id='footer' class='container'>"));
-      response.print(F(      "<nav class='navbar navbar-default navbar-fixed-bottom'>"));
-      response.print(F(        "<div class='navbar-inner navbar-content-center'>"));
-      response.print(F(          "<p style='margin: 15px;'>Desenvolvido por <b>Neto Rebou&ccedil;as</b></p>"));
-      response.print(F(        "</div>"));
-      response.print(F(      "</nav>"));
-      response.print(F(    "</div>"));
+      writeFooter(response);
       
       response.print(F(  "<body>"));
       response.print(F("</html>"));
@@ -377,88 +366,85 @@ void Server::createHttpResponseBuffer(String channel, String url) {
       response.print(F("["));
       
       if (smartHome.isOn(RELE_1)) {
-        response.print(F(  "{ \"id\":\"r1\", \"action\":\"/rele/off/r1\", \"removeClassB\":\"btn-danger\", \"addClassB\":\"btn-success\", \"removeClassI\":\"fa-thumbs-o-down\", \"addClassI\":\"fa-thumbs-o-up\" },"));
+        response.print(F(  "{ \"id\":\"r1\", \"action\":\"/rele/off/r1\", \"classB\":\"btn-success\", \"classI\":\"fa-thumbs-o-up\" },"));
       } else {
-        response.print(F(  "{ \"id\":\"r1\", \"action\":\"/rele/on/r1\", \"removeClassB\":\"btn-success\", \"addClassB\":\"btn-danger\", \"removeClassI\":\"fa-thumbs-o-up\", \"addClassI\":\"fa-thumbs-o-down\" },"));
+        response.print(F(  "{ \"id\":\"r1\", \"action\":\"/rele/on/r1\", \"classB\":\"btn-danger\", \"classI\":\"fa-thumbs-o-down\" },"));
       }
       
       if (smartHome.isOn(RELE_2)) {
-        response.print(F(  "{ \"id\":\"r2\", \"action\":\"/rele/off/r2\", \"removeClassB\":\"btn-danger\", \"addClassB\":\"btn-success\", \"removeClassI\":\"fa-thumbs-o-down\", \"addClassI\":\"fa-thumbs-o-up\" },"));
+        response.print(F(  "{ \"id\":\"r2\", \"action\":\"/rele/off/r2\", \"classB\":\"btn-success\", \"classI\":\"fa-thumbs-o-up\" },"));
       } else {
-        response.print(F(  "{ \"id\":\"r2\", \"action\":\"/rele/on/r2\", \"removeClassB\":\"btn-success\", \"addClassB\":\"btn-danger\", \"removeClassI\":\"fa-thumbs-o-up\", \"addClassI\":\"fa-thumbs-o-down\" },"));
+        response.print(F(  "{ \"id\":\"r2\", \"action\":\"/rele/on/r2\", \"classB\":\"btn-danger\", \"classI\":\"fa-thumbs-o-down\" },"));
       }
       
       if (smartHome.isOn(RELE_3)) {
-        response.print(F(  "{ \"id\":\"r3\", \"action\":\"/rele/off/r3\", \"removeClassB\":\"btn-danger\", \"addClassB\":\"btn-success\", \"removeClassI\":\"fa-thumbs-o-down\", \"addClassI\":\"fa-thumbs-o-up\" },"));
+        response.print(F(  "{ \"id\":\"r3\", \"action\":\"/rele/off/r3\", \"classB\":\"btn-success\", \"classI\":\"fa-thumbs-o-up\" },"));
       } else {
-        response.print(F(  "{ \"id\":\"r3\", \"action\":\"/rele/on/r3\", \"removeClassB\":\"btn-success\", \"addClassB\":\"btn-danger\", \"removeClassI\":\"fa-thumbs-o-up\", \"addClassI\":\"fa-thumbs-o-down\" },"));
+        response.print(F(  "{ \"id\":\"r3\", \"action\":\"/rele/on/r3\", \"classB\":\"btn-danger\", \"classI\":\"fa-thumbs-o-down\" },"));
       }
       
       if (smartHome.isOn(RELE_4)) {
-        response.print(F(  "{ \"id\":\"r4\", \"action\":\"/rele/off/r4\", \"removeClassB\":\"btn-danger\", \"addClassB\":\"btn-success\", \"removeClassI\":\"fa-thumbs-o-down\", \"addClassI\":\"fa-thumbs-o-up\" },"));
+        response.print(F(  "{ \"id\":\"r4\", \"action\":\"/rele/off/r4\", \"classB\":\"btn-success\", \"classI\":\"fa-thumbs-o-up\" },"));
       } else {
-        response.print(F(  "{ \"id\":\"r4\", \"action\":\"/rele/on/r4\", \"removeClassB\":\"btn-success\", \"addClassB\":\"btn-danger\", \"removeClassI\":\"fa-thumbs-o-up\", \"addClassI\":\"fa-thumbs-o-down\" },"));
+        response.print(F(  "{ \"id\":\"r4\", \"action\":\"/rele/on/r4\", \"classB\":\"btn-danger\", \"classI\":\"fa-thumbs-o-down\" },"));
       }
       
       if (smartHome.isOn(RELE_5)) {
-        response.print(F(  "{ \"id\":\"r5\", \"action\":\"/rele/off/r5\", \"removeClassB\":\"btn-danger\", \"addClassB\":\"btn-success\", \"removeClassI\":\"fa-thumbs-o-down\", \"addClassI\":\"fa-thumbs-o-up\" },"));
+        response.print(F(  "{ \"id\":\"r5\", \"action\":\"/rele/off/r5\", \"classB\":\"btn-success\", \"classI\":\"fa-thumbs-o-up\" },"));
       } else {
-        response.print(F(  "{ \"id\":\"r5\", \"action\":\"/rele/on/r5\", \"removeClassB\":\"btn-success\", \"addClassB\":\"btn-danger\", \"removeClassI\":\"fa-thumbs-o-up\", \"addClassI\":\"fa-thumbs-o-down\" },"));
+        response.print(F(  "{ \"id\":\"r5\", \"action\":\"/rele/on/r5\", \"classB\":\"btn-danger\", \"classI\":\"fa-thumbs-o-down\" },"));
       }
       
       if (smartHome.isOn(RELE_6)) {
-        response.print(F(  "{ \"id\":\"r6\", \"action\":\"/rele/off/r6\", \"removeClassB\":\"btn-danger\", \"addClassB\":\"btn-success\", \"removeClassI\":\"fa-thumbs-o-down\", \"addClassI\":\"fa-thumbs-o-up\" },"));
+        response.print(F(  "{ \"id\":\"r6\", \"action\":\"/rele/off/r6\", \"classB\":\"btn-success\", \"classI\":\"fa-thumbs-o-up\" },"));
       } else {
-        response.print(F(  "{ \"id\":\"r6\", \"action\":\"/rele/on/r6\", \"removeClassB\":\"btn-success\", \"addClassB\":\"btn-danger\", \"removeClassI\":\"fa-thumbs-o-up\", \"addClassI\":\"fa-thumbs-o-down\" },"));
+        response.print(F(  "{ \"id\":\"r6\", \"action\":\"/rele/on/r6\", \"classB\":\"btn-danger\", \"classI\":\"fa-thumbs-o-down\" },"));
       }
       
       if (smartHome.isOn(RELE_7)) {
-        response.print(F(  "{ \"id\":\"r7\", \"action\":\"/rele/off/r7\", \"removeClassB\":\"btn-danger\", \"addClassB\":\"btn-success\", \"removeClassI\":\"fa-thumbs-o-down\", \"addClassI\":\"fa-thumbs-o-up\" },"));
+        response.print(F(  "{ \"id\":\"r7\", \"action\":\"/rele/off/r7\", \"classB\":\"btn-success\", \"classI\":\"fa-thumbs-o-up\" },"));
       } else {
-        response.print(F(  "{ \"id\":\"r7\", \"action\":\"/rele/on/r7\", \"removeClassB\":\"btn-success\", \"addClassB\":\"btn-danger\", \"removeClassI\":\"fa-thumbs-o-up\", \"addClassI\":\"fa-thumbs-o-down\" },"));
+        response.print(F(  "{ \"id\":\"r7\", \"action\":\"/rele/on/r7\", \"classB\":\"btn-danger\", \"classI\":\"fa-thumbs-o-down\" },"));
       }
       
       if (smartHome.isOn(RELE_8)) {
-        response.print(F(  "{ \"id\":\"r8\", \"action\":\"/rele/off/r8\", \"removeClassB\":\"btn-danger\", \"addClassB\":\"btn-success\", \"removeClassI\":\"fa-thumbs-o-down\", \"addClassI\":\"fa-thumbs-o-up\" }"));
+        response.print(F(  "{ \"id\":\"r8\", \"action\":\"/rele/off/r8\", \"classB\":\"btn-success\", \"classI\":\"fa-thumbs-o-up\" }"));
       } else {
-        response.print(F(  "{ \"id\":\"r8\", \"action\":\"/rele/on/r8\", \"removeClassB\":\"btn-success\", \"addClassB\":\"btn-danger\", \"removeClassI\":\"fa-thumbs-o-up\", \"addClassI\":\"fa-thumbs-o-down\" }"));
+        response.print(F(  "{ \"id\":\"r8\", \"action\":\"/rele/on/r8\", \"classB\":\"btn-danger\", \"classI\":\"fa-thumbs-o-down\" }"));
       }
       
       response.print(F("]"));
     } else {
       response.print(F("<html>"));
       response.print(F(  "<head>"));
-      response.print(F(    "<meta name='viewport' content='width=device-width'>"));
-      response.print(F(    "<link rel='stylesheet' href='http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css'>"));
-      response.print(F(    "<link rel='stylesheet' href='http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css'>"));
-      response.print(F(    "<link rel='stylesheet' href='http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css'>"));
-      response.print(F(    "<link rel='shortcut icon' href='http://arduino.cc/favicon.ico'>"));
-      response.print(F(    "<style>"));
-      response.print(F(      ".btn:focus { outline: none; }"));
-      response.print(F(    "</style>"));
-      response.print(F(    "<script src='http://code.jquery.com/jquery-2.1.0.min.js'></script>"));
-      response.print(F(    "<script src='http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js'></script>"));
+      
+      writeHead(response);
+      
       response.print(F(    "<script>"));
       response.print(F(      "$(function() {"));
       response.print(F(        "$('.btn').click(function() {"));
-      response.print(F(          "$('#loading').modal({ backdrop: 'static', keyboard: 'false' });"));
+      response.print(F(          "var $btn = $(this);"));
+      response.print(F(          "var $i = $btn.find('i');"));
+      response.print(F(          "var bkpClassB = $btn.attr('class');"));
+      response.print(F(          "var bkpClassI = $i.attr('class');"));
+      response.print(F(          "$btn.attr('class', 'btn btn-lg btn-block btn-default disabled');"));
+      response.print(F(          "$i.attr('class', 'fa fa-cog fa-spin');"));
       response.print(F(          "$.ajax({"));
       response.print(F(            "dataType: 'json',"));
       response.print(F(            "url: $(this).attr('action'),"));
+      response.print(F(            "timeout: 5000,"));
       response.print(F(            "success: function(data) {"));
+      response.print(F(              "$btn.attr('class', bkpClassB);"));
+      response.print(F(              "$i.attr('class', bkpClassI);"));
       response.print(F(              "$.each(data, function() {"));
       response.print(F(                "if (this.action != null) $('#' + this.id).attr('action', this.action);"));
-      response.print(F(                "if (this.removeClassB != null) $('#' + this.id).removeClass(this.removeClassB);"));
-      response.print(F(                "if (this.addClassB != null) $('#' + this.id).addClass(this.addClassB);"));
-      response.print(F(                "if (this.removeClassI != null) $('#' + this.id).find('i').removeClass(this.removeClassI);"));
-      response.print(F(                "if (this.addClassI != null) $('#' + this.id).find('i').addClass(this.addClassI);"));
+      response.print(F(                "if (this.classB != null) $('#' + this.id).attr('class', 'btn btn-lg btn-block ' + this.classB);"));
+      response.print(F(                "if (this.classI != null) $('#' + this.id).find('i').attr('class', 'fa ' + this.classI);"));
       response.print(F(              "});"));
       response.print(F(            "},"));
       response.print(F(            "error: function() {"));
-      response.print(F(              "console.log('error');"));
-      response.print(F(            "},"));
-      response.print(F(            "complete: function() {"));
-      response.print(F(              "$('#loading').modal('hide');"));
+      response.print(F(              "$btn.attr('class', bkpClassB);"));
+      response.print(F(              "$i.attr('class', bkpClassI);"));
       response.print(F(            "}"));
       response.print(F(          "});"));
       response.print(F(        "});"));
@@ -569,23 +555,7 @@ void Server::createHttpResponseBuffer(String channel, String url) {
       
       response.print(F(    "</div>"));
       
-      response.print(F(    "<div id='loading' class='modal fade'>"));
-      response.print(F(      "<div class='modal-dialog modal-sm'>"));
-      response.print(F(        "<div class='modal-content'>"));
-      response.print(F(          "<div class='modal-body'>"));
-      response.print(F(            "<i class='fa fa-refresh fa-spin'></i> Aguarde..."));
-      response.print(F(          "</div>"));
-      response.print(F(        "</div>"));
-      response.print(F(      "</div>"));
-      response.print(F(    "</div>"));
-      
-      response.print(F(    "<div id='footer' class='container'>"));
-      response.print(F(      "<nav class='navbar navbar-default navbar-fixed-bottom'>"));
-      response.print(F(        "<div class='navbar-inner navbar-content-center'>"));
-      response.print(F(          "<p style='margin: 15px;'>Desenvolvido por <b>Neto Rebou&ccedil;as</b></p>"));
-      response.print(F(        "</div>"));
-      response.print(F(      "</nav>"));
-      response.print(F(    "</div>"));
+      writeFooter(response);
       
       response.print(F(  "<body>"));
       response.print(F("</html>"));
@@ -593,16 +563,9 @@ void Server::createHttpResponseBuffer(String channel, String url) {
   } else if (url == "/") {
     response.print(F("<html>"));
     response.print(F(  "<head>"));
-    response.print(F(    "<meta name='viewport' content='width=device-width'>"));
-    response.print(F(    "<link rel='stylesheet' href='http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css'>"));
-    response.print(F(    "<link rel='stylesheet' href='http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css'>"));
-    response.print(F(    "<link rel='stylesheet' href='http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css'>"));
-    response.print(F(    "<link rel='shortcut icon' href='http://arduino.cc/favicon.ico'>"));
-    response.print(F(    "<style>"));
-    response.print(F(      ".btn:focus { outline: none; }"));
-    response.print(F(    "</style>"));
-    response.print(F(    "<script src='http://code.jquery.com/jquery-2.1.0.min.js'></script>"));
-    response.print(F(    "<script src='http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js'></script>"));
+    
+    writeHead(response);
+    
     response.print(F(  "</head>"));
     response.print(F(  "<body style='padding-bottom: 70px;'>"));
     response.print(F(    "<div class='container'>"));
@@ -617,17 +580,33 @@ void Server::createHttpResponseBuffer(String channel, String url) {
     
     response.print(F(    "</div>"));
     
-    response.print(F(    "<div id='footer' class='container'>"));
-    response.print(F(      "<nav class='navbar navbar-default navbar-fixed-bottom'>"));
-    response.print(F(        "<div class='navbar-inner navbar-content-center'>"));
-    response.print(F(          "<p style='margin: 15px;'>Desenvolvido por <b>Neto Rebou&ccedil;as</b></p>"));
-    response.print(F(        "</div>"));
-    response.print(F(      "</nav>"));
-    response.print(F(    "</div>"));
+    writeFooter(response);
     
     response.print(F(  "<body>"));
     response.print(F("</html>"));
   }
   
   response.close();
+}
+
+void Server::writeHead(File response) {
+  response.print(F("<meta name='viewport' content='width=device-width'>"));
+  response.print(F("<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css'>"));
+  response.print(F("<link rel='stylesheet' href='http://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'>"));
+  response.print(F("<link rel='shortcut icon' href='http://arduino.cc/favicon.ico'>"));
+  response.print(F("<style>"));
+  response.print(F(  ".btn:focus { outline: none; }"));
+  response.print(F("</style>"));
+  response.print(F("<script src='https://code.jquery.com/jquery-3.2.1.min.js'></script>"));
+  response.print(F("<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js'></script>"));
+}
+
+void Server::writeFooter(File response) {
+  response.print(F("<div id='footer' class='container'>"));
+  response.print(F(  "<nav class='navbar navbar-default navbar-fixed-bottom'>"));
+  response.print(F(    "<div class='navbar-inner navbar-content-center'>"));
+  response.print(F(      "<p style='margin: 15px;'>Desenvolvido por <b>Neto Rebou&ccedil;as</b></p>"));
+  response.print(F(    "</div>"));
+  response.print(F(  "</nav>"));
+  response.print(F("</div>"));
 }
