@@ -6,6 +6,9 @@
 #include "Server.h"
 #include "SmartHome.h"
 
+String line1 = NULL_STR;
+String line2 = NULL_STR;
+
 void setup() {
   console.init();
   console.println("Inicializando...");
@@ -26,15 +29,7 @@ void setup() {
 
 void loop() {
   if (esp8266.available()) {
-    String s = esp8266.readLine();
-
-    s.trim();
-    display.setText(s);
-    server.processLine(s);
-
-    if (s == "WIFI GOT IP") {
-      display.setText(server.getIP());
-    }
+    esp8266.readLine();
   }
   
   if (console.available()) {

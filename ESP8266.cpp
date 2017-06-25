@@ -50,6 +50,9 @@ String ESP8266::readLine(long timeout) {
   s += "\n";
 
   logger.debug(">>> " + s);
+
+  display.append(s);
+  server.processLine(s);
   
   return s;
 }

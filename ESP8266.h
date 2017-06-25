@@ -13,7 +13,9 @@
 #define ESP8266_h
 
 #include "Arduino.h"
+#include "Display.h"
 #include "Logger.h"
+#include "Server.h"
 
 #define DEFAULT_TIMEOUT 100
 #define DEFAULT_DELAY   100

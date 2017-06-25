@@ -41,6 +41,7 @@
 #define Display_h
 
 #include "Arduino.h"
+#include "Constant.h"
 #include "LiquidCrystal.h"
 
 #define PIN_RS          12 // pin 04
@@ -58,6 +59,11 @@ class Display {
     void init();
     void clear();
     void setText(String line1, String line2 = "");
+    void append(String line);
+
+  private:
+    String lineOne;
+    String lineTwo;
 };
 
 extern Display display;

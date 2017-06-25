@@ -56,13 +56,17 @@ boolean Server::stopServer() {
 }
 
 boolean Server::startServer() {
+  boolean result = false;
+  
   esp8266.println("AT+CIPMUX=1");
   if (esp8266.readLineUntil("OK\r\n", "%ERROR\r\n", 5000)) {
     esp8266.println("AT+CIPSERVER=1," + port);
-    return esp8266.readLineUntil("OK\r\n", "%ERROR\r\n", 5000);
+    result = esp8266.readLineUntil("OK\r\n", "%ERROR\r\n", 5000);
+    esp8266.println("AT+CIPSTO=10");
+    esp8266.readLineUntil("OK\r\n", "%ERROR\r\n", 5000);
   }
 
-  return false;
+  return result;
 }
 
 String Server::getIP() {
@@ -103,6 +107,8 @@ void Server::processLine(String line) {
     for (int i = 0; i < length; i++) {
       console.write(esp8266.read());
     }
+    
+    console.println();
 
     processHttpRequest(channel, method, url);
   }
@@ -131,16 +137,15 @@ void Server::sendHttpResponseBuffer(String channel) {
     while (response.available() > 0) {
       int length = min(MAX_CIPSEND_LENGTH, response.available());
       byte buffer[length];
+      response.readBytes(buffer, length);
 
       esp8266.println("AT+CIPSEND=" + channel + "," + String(length));
       if (esp8266.readUntil('>', 10000)) {
-        response.readBytes(buffer, length);
         esp8266.write(buffer, length);
         if (!esp8266.readLineUntil("%SEND OK%", "%SEND FAIL%", 10000)) {
           break;
         }
-      } else {
-        console.println("@@@");
+        delay(20);
       }
     }
     

@@ -14,7 +14,19 @@ void Display::clear() {
 
 void Display::setText(String line1, String line2) {
   clear();
-  lcd.print(line1);
+  if (line1 != NULL && line1 != NULL_STR) lcd.print(line1);
   lcd.setCursor(0, 1);
-  lcd.print(line2);
+  if (line2 != NULL && line2 != NULL_STR) lcd.print(line2);
 }
+
+void Display::append(String line) {
+  if (line != NULL && line != NULL_STR) {
+    line.trim();
+    if (line.length() > 0) {
+      lineOne = lineTwo;
+      lineTwo = line;
+      setText(lineOne, lineTwo);
+    }
+  }
+}
+
