@@ -122,8 +122,6 @@ void Server::sendHttpResponseBuffer(String channel) {
   File response = SD.open("R_" + channel + ".txt");
   
   if (response) {
-    int count = 0;
-    
     while (response.available() > 0) {
       int length = min(MAX_CIPSEND_LENGTH, response.available());
       byte buffer[length];
@@ -132,7 +130,6 @@ void Server::sendHttpResponseBuffer(String channel) {
       if (esp8266.find('>')) {
         response.readBytes(buffer, length);
         esp8266.write(buffer, length);
-        count += length;
         if (!esp8266.readLineUntil("%SEND OK%", "%SEND FAIL%", 10000)) {
           break;
         }
